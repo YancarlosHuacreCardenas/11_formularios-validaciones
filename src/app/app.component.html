@@ -1,0 +1,345 @@
+<div class="app-container">
+  <!-- Toast Notification -->
+  <div class="toast-notification" [class.show]="notification" [class]="notification ? notification.type : ''" *ngIf="notification">
+    <div class="toast-content">
+      <span class="toast-icon">
+        <svg *ngIf="notification.type === 'success'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <svg *ngIf="notification.type === 'danger'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <svg *ngIf="notification.type === 'info'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      </span>
+      <span class="toast-message">{{ notification.message }}</span>
+    </div>
+  </div>
+
+  <!-- Header Section -->
+  <header class="app-header">
+    <div class="header-logo">
+      <div class="logo-box">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="logo-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      </div>
+      <div>
+        <h1>StockMaster</h1>
+        <p class="subtitle">Gestión de Inventario y Control de Proveedores</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" (click)="openAddModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="btn-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+        </svg>
+        Registrar Producto
+      </button>
+    </div>
+  </header>
+
+  <!-- Statistics Dashboard -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon-wrapper blue">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Total Productos</span>
+        <h2 class="stat-value">{{ stats.totalProductos }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-wrapper green">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Valor del Inventario</span>
+        <h2 class="stat-value">S/ {{ stats.valorTotal | number:'1.2-2' }}</h2>
+      </div>
+    </div>
+
+    <div class="stat-card" [class.alert]="stats.stockBajo > 0">
+      <div class="stat-icon-wrapper red">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+      </div>
+      <div class="stat-info">
+        <span class="stat-label">Bajo Stock (< 5 unid.)</span>
+        <h2 class="stat-value">{{ stats.stockBajo }}</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter & Search Controls -->
+  <section class="controls-panel">
+    <div class="search-box">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+      <input type="text" placeholder="Buscar por nombre, SKU o proveedor..." [value]="searchQuery" (input)="onSearchChange($event)">
+    </div>
+    
+    <div class="category-filters">
+      <button 
+        class="filter-pill" 
+        [class.active]="selectedCategory === 'Todos'"
+        (click)="onCategoryChange('Todos')">
+        Todos
+      </button>
+      <button 
+        *ngFor="let cat of categorias"
+        class="filter-pill" 
+        [class.active]="selectedCategory === cat"
+        (click)="onCategoryChange(cat)">
+        {{ cat }}
+      </button>
+    </div>
+  </section>
+
+  <!-- Inventory Table -->
+  <section class="table-container">
+    <table class="inventory-table" *ngIf="productosFiltrados.length > 0; else noProducts">
+      <thead>
+        <tr>
+          <th>SKU / Código</th>
+          <th>Nombre del Producto</th>
+          <th>Categoría</th>
+          <th>Precio Unitario</th>
+          <th>Stock</th>
+          <th>Fecha Ingreso</th>
+          <th>Proveedor / Contacto</th>
+          <th class="actions-header">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prod of productosFiltrados" [class.warning-row]="prod.stock < 5">
+          <td>
+            <span class="sku-badge">{{ prod.sku }}</span>
+          </td>
+          <td>
+            <div class="product-name-cell">
+              <span class="product-title">{{ prod.nombre }}</span>
+            </div>
+          </td>
+          <td>
+            <span class="category-tag">{{ prod.categoria }}</span>
+          </td>
+          <td class="price-cell">S/ {{ prod.precio | number:'1.2-2' }}</td>
+          <td>
+            <div class="stock-cell">
+              <span class="stock-number" [class.low]="prod.stock < 5">{{ prod.stock }}</span>
+              <span class="low-stock-alert" *ngIf="prod.stock < 5">¡Reabastecer!</span>
+            </div>
+          </td>
+          <td class="date-cell">{{ prod.fechaIngreso | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="supplier-info">
+              <span class="supplier-name">{{ prod.proveedorNombre }}</span>
+              <span class="supplier-phone">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="phone-icon">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                {{ prod.proveedorTelefono }}
+              </span>
+            </div>
+          </td>
+          <td>
+            <div class="actions-cell">
+              <button class="btn-icon-action btn-edit" title="Editar" (click)="openEditModal(prod)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+              </button>
+              <button class="btn-icon-action btn-delete" title="Eliminar" (click)="eliminarProducto(prod.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <ng-template #noProducts>
+      <div class="no-data-panel">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="no-data-icon">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+        </svg>
+        <h3>No se encontraron productos</h3>
+        <p>Intenta ajustar tu búsqueda o registra un nuevo producto en el sistema.</p>
+        <button class="btn btn-primary" (click)="openAddModal()">Registrar Primer Producto</button>
+      </div>
+    </ng-template>
+  </section>
+</div>
+
+<!-- Modal Dialog (Add / Edit Form) -->
+<div class="modal-backdrop" *ngIf="showFormModal" (click)="closeModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <header class="modal-header">
+      <h2>{{ isEditMode ? 'Editar Producto' : 'Registrar Nuevo Producto' }}</h2>
+      <button class="modal-close-btn" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </header>
+
+    <!-- FORMULARIO REACTIVO DE ANGULAR -->
+    <form [formGroup]="productoForm" (ngSubmit)="onSubmit()" class="modal-form">
+      <div class="form-scrollable-content">
+        
+        <!-- SKU & Nombre -->
+        <div class="form-row">
+          <div class="form-group-field flex-1">
+            <label for="sku">SKU / Código del Producto <span class="required-star">*</span></label>
+            <input 
+              id="sku"
+              type="text" 
+              formControlName="sku" 
+              placeholder="Ej: PROD-1025" 
+              [class.input-error]="f['sku'].touched && f['sku'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['sku'].touched && f['sku'].invalid">
+              <span *ngIf="f['sku'].errors?.['required']">El SKU es requerido.</span>
+              <span *ngIf="f['sku'].errors?.['skuInvalido']">Formato inválido. Debe ser <strong>PROD-XXXX</strong> (4 dígitos).</span>
+              <span *ngIf="f['sku'].errors?.['skuDuplicado']">Este SKU ya se encuentra registrado.</span>
+            </div>
+          </div>
+          
+          <div class="form-group-field flex-2">
+            <label for="nombre">Nombre del Producto <span class="required-star">*</span></label>
+            <input 
+              id="nombre"
+              type="text" 
+              formControlName="nombre" 
+              placeholder="Ej: Laptop Lenovo ThinkPad" 
+              [class.input-error]="f['nombre'].touched && f['nombre'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['nombre'].touched && f['nombre'].invalid">
+              <span *ngIf="f['nombre'].errors?.['required']">El nombre es requerido.</span>
+              <span *ngIf="f['nombre'].errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categoría, Precio y Stock -->
+        <div class="form-row">
+          <div class="form-group-field flex-1">
+            <label for="categoria">Categoría <span class="required-star">*</span></label>
+            <select 
+              id="categoria" 
+              formControlName="categoria"
+              [class.input-error]="f['categoria'].touched && f['categoria'].invalid"
+            >
+              <option value="" disabled selected>Selecciona una opción</option>
+              <option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</option>
+            </select>
+            <div class="error-tip" *ngIf="f['categoria'].touched && f['categoria'].invalid">
+              <span>Debes elegir una categoría.</span>
+            </div>
+          </div>
+
+          <div class="form-group-field flex-1">
+            <label for="precio">Precio Unitario (S/) <span class="required-star">*</span></label>
+            <input 
+              id="precio"
+              type="number" 
+              step="0.01"
+              formControlName="precio" 
+              placeholder="0.00"
+              [class.input-error]="f['precio'].touched && f['precio'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['precio'].touched && f['precio'].invalid">
+              <span *ngIf="f['precio'].errors?.['required']">El precio es requerido.</span>
+              <span *ngIf="f['precio'].errors?.['min']">El precio debe ser mayor a 0.</span>
+            </div>
+          </div>
+
+          <div class="form-group-field flex-1">
+            <label for="stock">Cantidad en Stock <span class="required-star">*</span></label>
+            <input 
+              id="stock"
+              type="number" 
+              formControlName="stock" 
+              placeholder="0"
+              [class.input-error]="f['stock'].touched && f['stock'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['stock'].touched && f['stock'].invalid">
+              <span *ngIf="f['stock'].errors?.['required']">El stock es requerido.</span>
+              <span *ngIf="f['stock'].errors?.['min']">No puede ser un número negativo.</span>
+              <span *ngIf="f['stock'].errors?.['pattern']">Debe ser un número entero.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha de Ingreso -->
+        <div class="form-row">
+          <div class="form-group-field flex-1">
+            <label for="fechaIngreso">Fecha de Ingreso <span class="required-star">*</span></label>
+            <input 
+              id="fechaIngreso"
+              type="date" 
+              formControlName="fechaIngreso" 
+              [class.input-error]="f['fechaIngreso'].touched && f['fechaIngreso'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['fechaIngreso'].touched && f['fechaIngreso'].invalid">
+              <span *ngIf="f['fechaIngreso'].errors?.['required']">La fecha de ingreso es requerida.</span>
+              <span *ngIf="f['fechaIngreso'].errors?.['fechaPasada']">La fecha no puede ser anterior a la actual.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-divider">Datos del Proveedor</div>
+
+        <!-- Nombre de Proveedor y Teléfono -->
+        <div class="form-row">
+          <div class="form-group-field flex-2">
+            <label for="proveedorNombre">Razón Social / Contacto <span class="required-star">*</span></label>
+            <input 
+              id="proveedorNombre"
+              type="text" 
+              formControlName="proveedorNombre" 
+              placeholder="Ej: Distribuidora Omega S.A."
+              [class.input-error]="f['proveedorNombre'].touched && f['proveedorNombre'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['proveedorNombre'].touched && f['proveedorNombre'].invalid">
+              <span *ngIf="f['proveedorNombre'].errors?.['required']">El contacto del proveedor es requerido.</span>
+              <span *ngIf="f['proveedorNombre'].errors?.['minlength']">Debe tener al menos 3 caracteres.</span>
+            </div>
+          </div>
+
+          <div class="form-group-field flex-1">
+            <label for="proveedorTelefono">Teléfono del Proveedor <span class="required-star">*</span></label>
+            <input 
+              id="proveedorTelefono"
+              type="tel" 
+              formControlName="proveedorTelefono" 
+              placeholder="Ej: 987654321"
+              [class.input-error]="f['proveedorTelefono'].touched && f['proveedorTelefono'].invalid"
+            >
+            <div class="error-tip" *ngIf="f['proveedorTelefono'].touched && f['proveedorTelefono'].invalid">
+              <span *ngIf="f['proveedorTelefono'].errors?.['required']">El teléfono es requerido.</span>
+              <span *ngIf="f['proveedorTelefono'].errors?.['telefonoInvalido']">Debe ser de 9 dígitos y empezar con 9.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <footer class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+        <button type="submit" class="btn btn-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="btn-icon">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          {{ isEditMode ? 'Guardar Cambios' : 'Registrar Producto' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</div>
